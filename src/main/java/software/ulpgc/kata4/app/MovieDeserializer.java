@@ -1,4 +1,4 @@
-package software.ulpgc.kata4.io;
+package software.ulpgc.kata4.app;
 
 import software.ulpgc.kata4.model.Movie;
 

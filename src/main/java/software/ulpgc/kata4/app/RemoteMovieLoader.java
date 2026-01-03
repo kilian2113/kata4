@@ -1,13 +1,13 @@
-package software.ulpgc.kata4.io;
+package software.ulpgc.kata4.app;
 
+import software.ulpgc.kata4.io.MovieLoader;
 import software.ulpgc.kata4.model.Movie;
 
 import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.function.Function;
+import java.util.stream.Stream;
 import java.util.zip.GZIPInputStream;
 
 public class RemoteMovieLoader implements MovieLoader {
@@ -18,7 +18,7 @@ public class RemoteMovieLoader implements MovieLoader {
         this.deserializer = deserializer;
     }
 
-    public List<Movie> loadAll() {
+    public Stream<Movie> loadAll() {
         try {
             return loadFrom(new URL(url));
         } catch (IOException e) {
@@ -26,29 +26,20 @@ public class RemoteMovieLoader implements MovieLoader {
         }
     }
 
-    private List<Movie> loadFrom(URL url) throws IOException {
+    private Stream<Movie> loadFrom(URL url) throws IOException {
         return loadFrom(url.openConnection());
     }
 
-    private List<Movie> loadFrom(URLConnection urlConnection) throws IOException {
-        try (InputStream inputStream = unzip(urlConnection.getInputStream())){
-            return loadFrom(inputStream);
-        }
+    private Stream<Movie> loadFrom(URLConnection urlConnection) throws IOException {
+        return loadFrom(unzip(urlConnection.getInputStream()));
     }
 
-    private List<Movie> loadFrom(InputStream inputStream) throws IOException {
+    private Stream<Movie> loadFrom(InputStream inputStream) throws IOException {
         return loadFrom(toReader(inputStream));
     }
 
-    private List<Movie> loadFrom(BufferedReader reader) throws IOException {
-        List<Movie> movies = new ArrayList<>();
-        reader.readLine();
-        while (true) {
-            String line = reader.readLine();
-            if (line == null) break;
-            movies.add(deserializer.apply(line));
-        }
-        return movies;
+    private Stream<Movie> loadFrom(BufferedReader reader) throws IOException {
+        return reader.lines().skip(1).map(deserializer);
     }
 
     private BufferedReader toReader(InputStream inputStream) throws IOException {
