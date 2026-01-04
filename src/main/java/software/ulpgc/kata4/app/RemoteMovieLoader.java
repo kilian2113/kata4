@@ -18,6 +18,7 @@ public class RemoteMovieLoader implements MovieLoader {
         this.deserializer = deserializer;
     }
 
+    @Override
     public Stream<Movie> loadAll() {
         try {
             return loadFrom(new URL(url));

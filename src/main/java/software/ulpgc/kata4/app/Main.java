@@ -18,8 +18,8 @@ import java.util.stream.Stream;
 public class Main extends JFrame {
     public Main() {
         this.setLocationRelativeTo(null);
-        this.setSize(800, 600);
         this.setTitle("Histogram display");
+        this.setSize(800, 600);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
@@ -60,7 +60,7 @@ public class Main extends JFrame {
         return ChartFactory.createHistogram(
                 histogram.title(),
                 histogram.x(),
-                "Count",
+                "Cuenta",
                 datasetOf(histogram)
         );
     }
@@ -72,7 +72,7 @@ public class Main extends JFrame {
     }
 
     private XYSeries seriesOf(Histogram histogram) {
-        XYSeries series = new XYSeries(histogram.title());
+        XYSeries series = new XYSeries(histogram.legend());
         for(int bin : histogram)
             series.add(bin, histogram.count(bin));
         return series;

@@ -26,6 +26,10 @@ public class Histogram implements Iterable<Integer> {
         return map.keySet().iterator();
     }
 
+    public int size() {
+        return map.size();
+    }
+
     public String title(){
         return labels.getOrDefault("title", "");
     }
